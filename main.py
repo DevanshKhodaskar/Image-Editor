@@ -27,7 +27,7 @@ mainarea.grid_columnconfigure(0, weight=1)
 original_image = None
 displayed_image = None
 photo_label = None
-brightnessScale = None  # Define brightnessScale globally
+brightnessScale = None  
 
 def open_image():
     path = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg; *.jpeg; *.png; *.gif; *.bmp")])

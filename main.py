@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageEnhance
 
+
 window = tk.Tk()
 window.title("Image Editor")
 
@@ -81,6 +82,8 @@ def imageShow():
         mainarea.bind('<Configure>', display_image)
 
 def updateBrightness():
+    for widget in bottombar.winfo_children():
+        widget.destroy()
     global brightnessScale, original_image, displayed_image
     brightImg_container = [None]  # Use a list to store brightImg
 
@@ -122,18 +125,152 @@ def updateBrightness():
     applyBrightness = tk.Button(bottombar, text="Apply", command=setBrightness)
     applyBrightness.pack(side='right')
 
+
+def updateSharpness():
+    for widget in bottombar.winfo_children():
+        widget.destroy()
+    global sharpnessScale,original_image,displayed_image
+    sharpImage_container=[None]
+    def setSharpness():
+        global original_image,displayed_image,photo_label,sharpnessScale
+        original_image=sharpImage_container[0]
+        displayed_image=ImageTk.PhotoImage(original_image)
+        photo_label.config(image=displayed_image)
+        photo_label.image=displayed_image
+        sharpnessScale.destroy()
+        applySharpness.destroy()
+    
+    
+    def sharpnessControl(value):
+        global displayed_image, photo_label, original_image
+        sharpEnhancer=ImageEnhance.Sharpness(resize_image(original_image, mainarea.winfo_width(), mainarea.winfo_height()))
+        sharpImg=sharpEnhancer.enhance(float(value)/100)
+
+        sharpImage_container[0]=sharpImg
+        sharp_photo=ImageTk.PhotoImage(sharpImg)
+
+        photo_label.config(image=sharp_photo)
+        photo_label.image = sharp_photo
+
+    sharpnessScale = tk.Scale(bottombar, from_=0, to=800, resolution=1, orient='horizontal', length=400, command=sharpnessControl)
+    sharpnessScale.set(100)
+    sharpnessScale.pack()
+    applySharpness = tk.Button(bottombar, text="Apply", command=setSharpness)
+    applySharpness.pack(side='right')
+
+
+
+def updateSaturation():
+    for widget in bottombar.winfo_children():
+        widget.destroy()
+    global saturationScale, original_image, displayed_image
+    saturationImg_container = [None]  # Use a list to store saturationImg
+
+    def setSaturation():
+        global original_image, displayed_image, photo_label, saturationScale
+    
+        # Update the original_image with the new saturation
+        original_image = saturationImg_container[0]
+        
+        displayed_image = ImageTk.PhotoImage(original_image)
+        
+        photo_label.config(image=displayed_image)
+        photo_label.image = displayed_image
+        
+        saturationScale.destroy()
+        applySaturation.destroy()
+
+    def saturationControl(value):
+        global displayed_image, photo_label, original_image
+    
+        # Use the original_image for saturation control
+        saturationEnhancer = ImageEnhance.Color(resize_image(original_image, mainarea.winfo_width(), mainarea.winfo_height()))
+        saturationImg = saturationEnhancer.enhance(float(value) / 100)
+        
+        # Store saturationImg in the container
+        saturationImg_container[0] = saturationImg
+        
+        # Convert saturationImg to PhotoImage
+        saturation_photo = ImageTk.PhotoImage(saturationImg)
+        
+        # Update the photo_label with the new image
+        photo_label.config(image=saturation_photo)
+        photo_label.image = saturation_photo
+    
+    saturationScale = tk.Scale(bottombar, from_=0, to=200, resolution=1, orient='horizontal', length=400, command=saturationControl)
+    saturationScale.set(100)
+    saturationScale.pack()
+
+    applySaturation = tk.Button(bottombar, text="Apply", command=setSaturation)
+    applySaturation.pack(side='right')
+
+
+
+def updateContrast():
+    for widget in bottombar.winfo_children():
+        widget.destroy()
+    global contrastScale, original_image, displayed_image
+    contrastImg_container = [None]  # Use a list to store contrastImg
+
+    def setContrast():
+        global original_image, displayed_image, photo_label, contrastScale
+    
+        # Update the original_image with the new contrast
+        original_image = contrastImg_container[0]
+        
+        displayed_image = ImageTk.PhotoImage(original_image)
+        
+        photo_label.config(image=displayed_image)
+        photo_label.image = displayed_image
+        
+        contrastScale.destroy()
+        applyContrast.destroy()
+
+    def contrastControl(value):
+        global displayed_image, photo_label, original_image
+    
+        # Use the original_image for contrast control
+        contrastEnhancer = ImageEnhance.Contrast(resize_image(original_image, mainarea.winfo_width(), mainarea.winfo_height()))
+        contrastImg = contrastEnhancer.enhance(float(value) / 100)
+        
+        # Store contrastImg in the container
+        contrastImg_container[0] = contrastImg
+        
+        # Convert contrastImg to PhotoImage
+        contrast_photo = ImageTk.PhotoImage(contrastImg)
+        
+        # Update the photo_label with the new image
+        photo_label.config(image=contrast_photo)
+        photo_label.image = contrast_photo
+    
+    contrastScale = tk.Scale(bottombar, from_=0, to=200, resolution=1, orient='horizontal', length=400, command=contrastControl)
+    contrastScale.set(100)
+    contrastScale.pack()
+
+    applyContrast = tk.Button(bottombar, text="Apply", command=setContrast)
+    applyContrast.pack(side='right')
+
+
+
+
+
+
+
+
+
+
 # Sidebar buttons
 brightness = tk.Button(sidebar, text="Brightness", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17), command=updateBrightness)
 brightness.grid(column=0, row=0, pady=5)
 
-sharpness = tk.Button(sidebar, text="Sharpness", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17))
+sharpness = tk.Button(sidebar, text="Sharpness", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17),command=updateSharpness)
 sharpness.grid(column=0, row=1, pady=5)
 
-saturation = tk.Button(sidebar, text="Saturation", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17))
+saturation = tk.Button(sidebar, text="Saturation", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17),command=updateSaturation)
 saturation.grid(column=0, row=2, pady=5)
 
-warmth = tk.Button(sidebar, text="Warmth", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17))
-warmth.grid(column=0, row=3, pady=5)
+contrast = tk.Button(sidebar, text="contrast", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17),command=updateContrast)
+contrast.grid(column=0, row=3, pady=5)
 
 exposure = tk.Button(sidebar, text="Exposure", fg='white', relief='raised', bg='black', borderwidth=2, width=10, height=2, font=('Helvetica', 17))
 exposure.grid(column=0, row=4, pady=5)

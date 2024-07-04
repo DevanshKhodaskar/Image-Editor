@@ -1,2 +1,2 @@
 # Image-Editor
-It aims for basic editing such as brightness,sharpness,etc
+It aims for basic editing such as resizeing,brightness,sharpness,etc

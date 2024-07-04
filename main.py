@@ -92,16 +92,44 @@ def imageShow():
 def resize_img():
     global original_image, displayed_image, photo_label
     
-    if original_image:
-        # Resize the original image to a smaller size
-        resized_image = resize_image(original_image, 100, 100)
+
+    #Function for Resizing
+    def ApplyResize():
+        global original_image, displayed_image, photo_label
+        if original_image:
+            resize_height=int(height_label.get())
+            resize_width=int(width_label.get())
+            resized_image = resize_image(original_image, resize_height, resize_width)
+            
+            
+            displayed_image = ImageTk.PhotoImage(resized_image)
+            original_image=resized_image
         
-        # Update displayed_image with the resized image
-        displayed_image = ImageTk.PhotoImage(resized_image)
-        original_image=resized_image
-        # Update the photo_label with the resized image
-        photo_label.config(image=displayed_image)
-        photo_label.image = displayed_image
+            photo_label.config(image=displayed_image)
+            photo_label.image = displayed_image
+
+            height_text.destroy()
+            height_label.destroy()
+            Width_text.destroy()
+            width_label.destroy()
+            resize_apply.destroy()
+
+    height_text=tk.Label(topbar,text="Height:",font=('Helvitica',14),fg='white',bg='#36454F')
+    height_text.pack(side='left',padx=3)
+    
+    height_label=tk.Entry(topbar,width=5,font=('arial',14))
+    height_label.pack(side='left')
+    Width_text=tk.Label(topbar,text="Width:",font=('Helvitica',14),fg='white',bg='#36454F')
+    Width_text.pack(side='left',padx=3)
+    width_label=tk.Entry(topbar,width=5,font=('arial',14))
+    width_label.pack(side='left')
+    resize_apply=tk.Button(topbar,text="Apply",font=('Helvitica',14),fg='white', relief='raised', bg='black',command=ApplyResize)
+    resize_apply.pack(side='left',padx=10)
+
+    
+
+
+
 
 
 #Function to update brightness for brightness button
